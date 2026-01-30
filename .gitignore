@@ -16,6 +16,11 @@ __pycache__/
 # Ignore virtual environment directories
 venv/
 env/
+.venv/
+.env/
+env/.bak/
+venv.bak/
+env.bak/
 
 # Ignore VSCode settings
 .vscode/
