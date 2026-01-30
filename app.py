@@ -6,10 +6,10 @@ from pydantic import BaseModel
 import numpy as np
 import tensorflow as tf
 import joblib
+import httpx  # Pour les appels API externes
 
 app = FastAPI()
 
-# Configuration CORS pour Lovable
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,9 +17,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Chargement sécurisé
+# Configuration de ta clé (À mettre sur Render dans les "Environment Variables")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+
+# Chargement du modèle
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-model = tf.keras.models.load_model(os.path.join(BASE_DIR, 'model_diabete.keras'))
+model = tf.keras.models.load_model(os.path.join(BASE_DIR, 'diabetes_model.keras'))
 scaler = joblib.load(os.path.join(BASE_DIR, 'scaler.pkl'))
 
 class DiabetesData(BaseModel):
@@ -47,9 +50,41 @@ async def predict(data: DiabetesData):
     return {
         "prediction": result,
         "probability": round(probability, 4),
-        "status": "Diabétique" if result == 1 else "Non-Diabétique"
+        "status": "Risque Élevé" if result == 1 else "Risque Faible"
     }
 
-# --- AJOUT CRUCIAL : Lancement du serveur ---
+# --- NOUVEL ENDPOINT AVEC VRAIES NEWS ---
+@app.get("/health-content")
+async def get_health_content():
+    url = f"https://newsapi.org/v2/everything?q=diabète+santé&language=fr&sortBy=relevancy&pageSize=3&apiKey={NEWS_API_KEY}"
+
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+            news_data = response.json()
+            
+            # On nettoie la réponse pour Lovable
+            articles = []
+            if news_data.get("status") == "ok":
+                for art in news_data.get("articles", []):
+                    articles.append({
+                        "title": art["title"],
+                        "summary": art["description"],
+                        "link": art["url"],
+                        "source": art["source"]["name"]
+                    })
+    except Exception as e:
+        articles = [{"title": "Erreur news", "summary": str(e), "link": "#"}]
+
+    return {
+        "daily_tip": "Réduire le sucre ajouté diminue la fatigue pancréatique.",
+        "news": articles,
+        "preventions": [
+            {"topic": "Sport", "advice": "30 min de marche active réduit la glycémie."},
+            {"topic": "Fibres", "advice": "Mangez des légumes verts à chaque repas."}
+        ]
+    }
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

@@ -18,6 +18,7 @@ venv/
 env/
 .venv/
 .env/
+.env
 env/.bak/
 venv.bak/
 env.bak/
@@ -50,3 +51,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+
+*.keras
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+
+trials_dir/
