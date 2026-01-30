@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;
+    --foreground: 210 40% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 15%;
+
+    --primary: 174 62% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 174 30% 94%;
+    --secondary-foreground: 174 62% 30%;
+
+    --muted: 40 20% 94%;
+    --muted-foreground: 210 20% 45%;
+
+    --accent: 174 40% 90%;
+    --accent-foreground: 174 62% 30%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 60% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 38 92% 15%;
+
+    --border: 210 20% 88%;
+    --input: 210 20% 92%;
+    --ring: 174 62% 40%;
+
+    --radius: 0.75rem;
+
+    /* Custom gradients */
+    --gradient-risk: linear-gradient(90deg, hsl(152, 60%, 45%) 0%, hsl(38, 92%, 55%) 50%, hsl(0, 72%, 55%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(0, 0%, 100%) 0%, hsl(40, 33%, 97%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(174, 62%, 45%) 0%, hsl(174, 62%, 35%) 100%);
+    
+    /* Shadows */
+    --shadow-card: 0 4px 20px -4px hsla(210, 40%, 15%, 0.08);
+    --shadow-button: 0 4px 14px -3px hsla(174, 62%, 40%, 0.4);
+    --shadow-result: 0 8px 30px -6px hsla(210, 40%, 15%, 0.12);
+  }
+
+  .dark {
+    --background: 210 40% 10%;
+    --foreground: 40 33% 98%;
+
+    --card: 210 35% 14%;
+    --card-foreground: 40 33% 98%;
+
+    --popover: 210 35% 14%;
+    --popover-foreground: 40 33% 98%;
+
+    --primary: 174 62% 50%;
+    --primary-foreground: 210 40% 10%;
+
+    --secondary: 210 30% 20%;
+    --secondary-foreground: 174 62% 70%;
+
+    --muted: 210 30% 18%;
+    --muted-foreground: 210 20% 60%;
+
+    --accent: 210 30% 22%;
+    --accent-foreground: 174 62% 70%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 60% 50%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 38 92% 15%;
+
+    --border: 210 25% 22%;
+    --input: 210 25% 20%;
+    --ring: 174 62% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .form-field-icon {
+    @apply absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors;
+  }
+
+  .form-field-icon-active {
+    @apply text-primary;
+  }
+
+  .risk-gauge-track {
+    background: var(--gradient-risk);
+  }
+
+  .result-card {
+    box-shadow: var(--shadow-result);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out forwards;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
