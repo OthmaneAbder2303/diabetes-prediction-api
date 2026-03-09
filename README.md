@@ -107,7 +107,7 @@ Follow these steps to get the Diabetes Prediction API up and running on your loc
     ```
     (`1` typically means diabetic, `0` means non-diabetic)
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 diabetes-prediction-api/
