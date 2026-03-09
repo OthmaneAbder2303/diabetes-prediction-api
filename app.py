@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import numpy as np
 import tensorflow as tf
 import joblib
-import httpx  # Pour les appels API externes
+import httpx
 
 app = FastAPI()
 
@@ -17,10 +17,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configuration de ta clé (À mettre sur Render dans les "Environment Variables")
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
-# Chargement du modèle
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 model = tf.keras.models.load_model(os.path.join(BASE_DIR, 'diabetes_model.keras'))
 scaler = joblib.load(os.path.join(BASE_DIR, 'scaler.pkl'))
@@ -53,7 +51,6 @@ async def predict(data: DiabetesData):
         "status": "Risque Élevé" if result == 1 else "Risque Faible"
     }
 
-# --- NOUVEL ENDPOINT AVEC VRAIES NEWS ---
 @app.get("/health-content")
 async def get_health_content():
     url = f"https://newsapi.org/v2/everything?q=diabète+santé&language=fr&sortBy=relevancy&pageSize=3&apiKey={NEWS_API_KEY}"
@@ -63,7 +60,6 @@ async def get_health_content():
             response = await client.get(url)
             news_data = response.json()
             
-            # On nettoie la réponse pour Lovable
             articles = []
             if news_data.get("status") == "ok":
                 for art in news_data.get("articles", []):
@@ -87,4 +83,5 @@ async def get_health_content():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
+
     uvicorn.run(app, host="0.0.0.0", port=port)
